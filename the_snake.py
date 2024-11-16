@@ -1,5 +1,5 @@
 from random import randint
-from typing import Optional, Self
+from typing import Optional
 
 import pygame
 
@@ -48,10 +48,10 @@ class GameObject:
     """
 
     def __init__(
-        self: Self,
+        self,
         position: Optional[tuple[int, int]] = None,
         body_color: Optional[tuple[int, int, int]] = None
-    ) -> Self:
+    ):
         """
         Базовый конструктор игрового объекта; инициализация позиции и цвета
         игрового объекта.
@@ -63,7 +63,7 @@ class GameObject:
 
         self.body_color = body_color if body_color else BOARD_BACKGROUND_COLOR
 
-    def draw(self: Self) -> None:
+    def draw(self) -> None:
         """
         Абстрактный метод, предназначенный для переопределения в дочерних
         классах. Метод должен определять, как отрисовывается игровой объект.
@@ -74,14 +74,14 @@ class GameObject:
 class Apple(GameObject):
     """Игровой объект "Яблоко"."""
 
-    def __init__(self: Self) -> Self:
+    def __init__(self):
         """
         Инициализирует объект "Яблоко". Устанавливает цвет яблока и
         случайную свободную позицию на игровом поле.
         """
         super().__init__(self.randomize_position(), APPLE_COLOR)
 
-    def randomize_position(self: Self) -> tuple[int, int]:
+    def randomize_position(self) -> tuple[int, int]:
         """Возращает случайную позицию в пикселях."""
         position = (
             randint(0, GRID_WIDTH - 1) * GRID_SIZE,
@@ -89,7 +89,7 @@ class Apple(GameObject):
         )
         return position
 
-    def draw(self: Self) -> None:
+    def draw(self) -> None:
         """Отрисовывает яблоко в позиции self.position."""
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)
@@ -104,7 +104,7 @@ class Snake(GameObject):
     аспекты поведения змейки в игре.
     """
 
-    def __init__(self: Self) -> Self:
+    def __init__(self):
         """Инициализирует начальное состояние змейки."""
         super().__init__(body_color=SNAKE_COLOR)
 
@@ -114,7 +114,7 @@ class Snake(GameObject):
         self.next_direction = None
         self.last = self.positions[-1]
 
-    def reset(self: Self) -> None:
+    def reset(self) -> None:
         """Сбрасывает состояние змейки в начальное в случае проигрыша"""
         self.length = 1
         self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
@@ -122,13 +122,13 @@ class Snake(GameObject):
         self.direction = RIGHT
         self.last = self.positions[-1]
 
-    def update_direction(self: Self) -> None:
+    def update_direction(self) -> None:
         """Обновляет направление движения змейки"""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
 
-    def move(self: Self) -> int:
+    def move(self) -> int:
         """
         Обновляет позицию змейки, добавляя новую голову в начало списка
         сегментов и, если яблоко не было съедено, удаляя последний элемент.
@@ -157,7 +157,7 @@ class Snake(GameObject):
         self.position = self.get_head_position()
         return 0
 
-    def draw(self: Self) -> None:
+    def draw(self) -> None:
         """Отрисовывает все сегменты змейки"""
         for position in self.positions[:-1]:
             rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
@@ -174,7 +174,7 @@ class Snake(GameObject):
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
-    def get_head_position(self: Self) -> tuple[int, int]:
+    def get_head_position(self) -> tuple[int, int]:
         """Возвращает текущие координаты головы змейки"""
         return self.positions[0]
 
