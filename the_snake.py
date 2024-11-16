@@ -5,7 +5,7 @@ import pygame
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
-GRID_SIZE = 15
+GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 
@@ -28,7 +28,7 @@ APPLE_COLOR = (255, 0, 0)
 SNAKE_COLOR = (0, 255, 0)
 
 # Скорость движения змейки:
-SPEED = 20
+SPEED = 15
 
 # Настройка игрового окна:
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
@@ -106,17 +106,19 @@ class Snake(GameObject):
 
     def __init__(self: Self) -> Self:
         """Инициализирует начальное состояние змейки."""
+        super().__init__(body_color=SNAKE_COLOR)
+
         self.length = 1
         self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
         self.direction = RIGHT
         self.next_direction = None
         self.last = self.positions[-1]
-        self.body_color = SNAKE_COLOR
 
     def reset(self: Self) -> None:
         """Сбрасывает состояние змейки в начальное в случае проигрыша"""
         self.length = 1
         self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        self.position = self.positions[0]
         self.direction = RIGHT
         self.last = self.positions[-1]
 
@@ -151,6 +153,8 @@ class Snake(GameObject):
         else:
             self.last = self.positions[-1]
             self.positions.pop()
+
+        self.position = self.get_head_position()
         return 0
 
     def draw(self: Self) -> None:
